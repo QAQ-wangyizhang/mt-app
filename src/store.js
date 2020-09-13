@@ -4,12 +4,20 @@ import Vue from "vue";
 Vue.use(Vuex);
 
 const state = {
-  position: "北京"
+  position: "北京",
+  city : "北京市",
+  userName : '',
 }
 
 const mutations = {
   setPosition(state, val) {
     state.position = val;
+  },
+  setCity(state,val){
+    state.city = val
+  },
+  setUserName(state,val){
+    state.userName = val;
   }
 }
 

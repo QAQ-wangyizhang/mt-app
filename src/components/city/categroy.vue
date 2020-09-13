@@ -6,64 +6,29 @@
         <a :href="'#city-'+item">{{item}}</a>
       </dd>
     </dl>
-    <dl :id="'city-'+index" class="m-categroy-section" v-for="(item,index) in cityGroup" :key="index">
-        <dt>{{index}}</dt>
-        <dd >
-            <span v-for="city in item" :key="city.id" >
-                {{city.name}}
-            </span>
-        </dd>
+    <dl
+      :id="'city-'+index"
+      class="m-categroy-section"
+      v-for="(item,index) in cityGroup"
+      :key="index"
+    >
+      <dt>{{index}}</dt>
+      <dd>
+        <span v-for="city in item" :key="city.id" @click="changeCity(city)">{{city.name}}</span>
+      </dd>
     </dl>
   </div>
 </template>
 
 <script>
+import { mapState ,mapMutations} from "vuex";
 export default {
-  created() {
-    let data = [
-      {
-        id: 1,
-        name: "北京",
-        pinyin: "beijing",
-        acronym: "bj",
-        rank: "S",
-        firstChar: "b",
-      },
-      {
-        id: 2,
-        name: "上海",
-        pinyin: "shanghai",
-        acronym: "sh",
-        rank: "S",
-        firstChar: "s",
-      },
-      {
-        id: 3,
-        name: "云南",
-        pinyin: "yunnan",
-        acronym: "yn",
-        rank: "S",
-        firstChar: "y",
-      },
-      {
-        id: 4,
-        name: "南京",
-        pinyin: "nanjing",
-        acronym: "nj",
-        rank: "A",
-        firstChar: "n",
-      },
-      {
-        id: 5,
-        name: "深圳",
-        pinyin: "shenzheng",
-        acronym: "sz",
-        rank: "S",
-        firstChar: "s",
-      },
-    ];
+  async created() {
+    let data = null;
+    let res = await this.$api.getCityList();
+    console.log(res.data);
     let obj = {};
-    data.forEach(item => {
+    res.data.forEach(item => {
         if(obj[item.firstChar.toUpperCase()]){
             obj[item.firstChar.toUpperCase()].push(item)
         }else{
@@ -71,13 +36,23 @@ export default {
         }
     })
     this.cityGroup = obj;
-    console.log(this.cityGroup);
+    // console.log(this.cityGroup);
   },
-
+  computed: {
+    ...mapState(["position"]),
+  },
+  methods : {
+    ...mapMutations(['setPosition','setCity']),
+    changeCity(val){
+      this.setPosition(val.name);
+      this.setCity(val.name);
+      this.$router.push({name : "index"})
+    }
+  },
   data() {
     return {
       cityList: [],
-      cityGroup : {},
+      cityGroup: {},
       list: [
         "A",
         "B",

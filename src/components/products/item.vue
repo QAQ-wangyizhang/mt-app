@@ -32,14 +32,14 @@
         </span>
       </p>
       <p>
-        <span class="s-item-price">人均￥{{meta.avg_price}}</span>
+        <span class="s-item-price">人均￥{{meta.avgPrice}}</span>
       </p>
       <ul class="deal-items">
-        <li class="items" v-for="(item,index) in meta.deal_items.slice(0,2)" :key="index">
+        <li class="items" v-for="(item,index) in meta.dealItems" :key="index">
           <p class="deal-title">{{item.titel}}</p>
           <p>
             <span class="deal-price">￥{{item.price}}</span>
-            <span class="deal-old-price">门市价￥{{item.counter_price}}</span>
+            <span class="deal-old-price">门市价￥{{item.counterPrice}}</span>
             <span class="deal-sales">已售{{item.saleNum}}</span>
           </p>
         </li>

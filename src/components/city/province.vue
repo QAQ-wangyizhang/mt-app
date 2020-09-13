@@ -6,16 +6,20 @@
       title="省份"
       :showWrapperActive="provinceActive"
       :value="province"
+      :disabled="!cityDisabled"
       @change_active="proAcitve"
-      @change_val ="proVal"
+      @change_val="changeProVal"
+      className="province"
     ></m-select>
     <m-select
       :list="cityList"
       :showWrapperActive="cityActive"
       @change_active="citAcitve"
-      @change_val ="cityVal"
+      @change_val="changeCityVal"
+      :disabled="cityDisabled"
       title="城市"
       :value="city"
+      className="city"
     ></m-select>
     <span>直接搜索:</span>&nbsp;
     <el-select
@@ -35,7 +39,20 @@
 
 <script>
 import MSelect from "./select";
+import {mapMutations} from "vuex"
 export default {
+  created() {
+    this.$api.getProvince().then((res) => {
+      // console.log(res);
+      this.provinceList = res.data.map((item) => {
+        return item.provinceName;
+      });
+      this.states = res.data.map((item) => {
+        return item.provinceName;
+      });
+      this.res = res.data;
+    });
+  },
   mounted() {
     this.list = this.states.map((item) => {
       return { value: `value:${item}`, label: item };
@@ -45,11 +62,25 @@ export default {
     MSelect,
   },
   methods: {
-    proVal(val){
+    ...mapMutations(['setPosition','setCity']),
+    // 改变省份的值
+    changeProVal(val) {
+      // this.cityDisabled = true;
+      this.setPosition(val);
+      let filter = this.res.filter((item) => {
+        return item.provinceName == val;
+      });
       this.province = val;
+      this.cityList = filter[0].cityInfoList.map((item) => {
+        return item.name;
+      });
+      this.setCity("  ")
     },
-    cityVal(val){
+    // 改变city的值
+    changeCityVal(val) {
+      this.setCity(val);
       this.city = val;
+      this.$router.push({name : "index"})
     },
     proAcitve(flag) {
       this.provinceActive = flag;
@@ -62,7 +93,7 @@ export default {
       // console.log(flag,'city')
     },
     remoteMethod(query) {
-    // 请求后端接口
+      // 请求后端接口
       if (query !== "") {
         this.loading = true;
         setTimeout(() => {
@@ -78,12 +109,14 @@ export default {
   },
   data() {
     return {
+      res: {},
+      cityDisabled: true,
       provinceActive: false,
       cityActive: false,
-      provinceList: ["上海", "北京", "山东", "宁夏", "黑龙江", "广州"],
+      provinceList: [],
       province: "省份",
       city: "城市",
-      cityList: ["哈尔滨", "牡丹江", "鹤岗"],
+      cityList: ['请选择省份'],
       options: [],
       value: [],
       list: [],

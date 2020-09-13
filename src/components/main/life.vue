@@ -30,7 +30,7 @@
         <div class="m-life-pic"></div>
       </el-col>
       <el-col :span="6">
-        <div class="m-life-login">
+        <div class="m-life-login" v-if="!userName">
           <h4>
             <img src="//s0.meituan.net/bs/fe-web-meituan/2d05c2b/img/avatar.jpg" alt />
           </h4>
@@ -45,6 +45,16 @@
             <router-link :to="{name:'login'}">
               <el-button>立即登录</el-button>
             </router-link>
+          </p>
+        </div>
+        <div class="m-life-login" v-else>
+          <h4>
+            <img src="//s0.meituan.net/bs/fe-web-meituan/2d05c2b/img/avatar.jpg" alt />
+          </h4>
+
+          <p class="m-life-login-name">Hi! 你好</p>
+          <p>
+            {{userName}}
           </p>
         </div>
       </el-col>
@@ -75,10 +85,14 @@
 
 <script>
 import MSlider from "@/components/main/slider";
+import {mapState} from "vuex";
 export default {
   components: {
     MSlider,
   },
+  computed : {
+    ...mapState(['userName'])
+  }
 };
 </script>
 

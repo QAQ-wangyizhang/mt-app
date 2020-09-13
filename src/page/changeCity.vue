@@ -25,10 +25,22 @@ export default {
     Hot,
     Categroy,
   },
+  created() {
+    this.$api.getHotCity().then((res) => {
+      this.hotList = res.data.map((item) => {
+        return item.name;
+      });
+    });
+    this.$api.getRecentCity().then((res) => {
+      this.recentList = res.data.map((item) => {
+        return item.name;
+      });
+    });
+  },
   data() {
     return {
-      hotList: ["北京", "上海", "西安", "银川", "深圳"],
-      recentList: ["北京", "上海", "西安", "银川", "深圳"],
+      hotList: [],
+      recentList: [],
     };
   },
 };
